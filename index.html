@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torvax - Innovation Hub for Sustainable & Electrification</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Telemetry Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            border: '#334155',
+                            accent: '#38bdf8',
+                            glow: '#0284c7',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
+                        }
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+        }
+        .glow-accent {
+            box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col selection:bg-brand-accent selection:text-slate-900">
+
+    <!-- HERO BACKGROUND CANVAS ANIMATION -->
+    <canvas id="hero-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo with Custom Vector Graphic -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-blue-800 to-slate-900 flex items-center justify-center shadow-lg shadow-cyan-500/30 border border-cyan-500/40 relative overflow-hidden">
+                    <!-- Embedded Custom Logo SVG -->
+                    <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L4 20H8L10.5 14H13.5L16 20H20L12 2Z" fill="#38BDF8" fill-opacity="0.85"/>
+                        <path d="M13 7L21 2M21 2H16M21 2V7" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9.5 11L12 5L14.5 11H9.5Z" fill="#0284C7"/>
+                    </svg>
+                </div>
+                <div>
+                    <!-- Torvax (T besar, orvax kecil) -->
+                    <span class="text-2xl font-black tracking-wide text-white">Torvax</span>
+                    <span class="block text-[10px] font-mono tracking-widest text-brand-accent uppercase">Innovation Hub</span>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-slate-300">
+                <a href="#overview" class="hover:text-brand-accent transition-colors duration-200">Overview</a>
+                <a href="#technologies" class="hover:text-brand-accent transition-colors duration-200">Core Tech</a>
+                <a href="#dragon-dashboard" class="hover:text-brand-accent transition-colors duration-200 flex items-center space-x-1.5">
+                    <span>Dragon Engine</span>
+                    <span class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2 py-0.5 rounded-full border border-cyan-500/30 font-mono">v100</span>
+                </a>
+                <a href="#simulator" class="hover:text-brand-accent transition-colors duration-200">ROI Simulator</a>
+                <a href="#contact" class="hover:text-brand-accent transition-colors duration-200">Contact</a>
+            </nav>
+
+            <!-- Status Indicator & Action -->
+            <div class="flex items-center space-x-4">
+                <div class="hidden sm:flex items-center space-x-2 bg-slate-900/80 border border-slate-700/60 px-3 py-1.5 rounded-full text-xs font-mono">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-slate-300">Kernel Node: <strong class="text-emerald-400">ONLINE</strong></span>
+                </div>
+                <a href="#dragon-dashboard" class="bg-brand-accent hover:bg-cyan-400 text-slate-900 font-semibold px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-md shadow-cyan-500/20 flex items-center space-x-2">
+                    <i class="fa-solid fa-bolt text-xs"></i>
+                    <span>Console</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 flex-grow">
+
+        <!-- HERO SECTION -->
+        <section id="overview" class="relative pt-20 pb-24 md:pt-32 md:pb-36 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-flex items-center space-x-2 bg-brand-accent/10 border border-brand-accent/30 text-brand-accent px-4 py-1.5 rounded-full text-xs font-mono mb-6">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>Next-Gen eBPF Kernel Control Plane Architecture</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight mb-8">
+                    Pioneering Sustainable Energy, Electrification & <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Kernel Precision</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-300 leading-relaxed mb-10 max-w-3xl mx-auto">
+                    Torvax integrates ultra-low latency eBPF telemetry with smart grid electrification. Powering energy infrastructure, AI datacenters, and extreme quantum/fusion control loops with sub-millisecond reliability.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#dragon-dashboard" class="w-full sm:w-auto px-8 py-4 bg-brand-accent hover:bg-cyan-400 text-slate-950 font-bold rounded-xl shadow-lg shadow-cyan-500/25 transition-all duration-200 flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <span>Launch Dragon Controller v100</span>
+                    </a>
+                    <a href="#simulator" class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold rounded-xl transition-all duration-200 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-calculator text-cyan-400"></i>
+                        <span>Run ROI Simulator</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- KEY STATS STRIP -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-cyan-400 font-mono mb-1">&lt; 1.0 ms</div>
+                    <div class="text-xs uppercase font-mono tracking-wider text-slate-400">Target Latency</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400 font-mono mb-1">0.00 %</div>
+                    <div class="text-xs uppercase font-mono tracking-wider text-slate-400">Memory Leak</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-blue-400 font-mono mb-1">&lt; 1.0 %</div>
+                    <div class="text-xs uppercase font-mono tracking-wider text-slate-400">CPU Overhead</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center">
+                    <div class="text-3xl sm:text-4xl font-extrabold text-amber-400 font-mono mb-1">100 %</div>
+                    <div class="text-xs uppercase font-mono tracking-wider text-slate-400">Sustained Load</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DRAGON CONTROLLER DASHBOARD SECTION -->
+        <section id="dragon-dashboard" class="py-20 bg-slate-900/60 border-y border-brand-border relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <div class="flex items-center space-x-2 text-brand-accent text-sm font-mono mb-2">
+                            <i class="fa-solid fa-terminal"></i>
+                            <span>Kernel-Space Control Console</span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white">Dragon Controller v100 Engine</h2>
+                    </div>
+                    <p class="text-slate-400 max-w-md mt-4 md:mt-0 text-sm">
+                        Live real-time telemetry feed from the active eBPF kernel hook. Manage subsystems, monitor interrupt latency, and balance grid load dynamically.
+                    </p>
+                </div>
+
+                <!-- DASHBOARD GRID -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- LEFT COLUMN: CONTROLS & SWITCHES -->
+                    <div class="space-y-6">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold text-white mb-4 flex items-center justify-between">
+                                <span>Engine Control Modules</span>
+                                <i class="fa-solid fa-sliders text-cyan-400"></i>
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Switch 1 -->
+                                <div class="flex items-center justify-between p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                                    <div class="pr-2">
+                                        <div class="text-sm font-semibold text-slate-200">eBPF Kernel Injection</div>
+                                        <div class="text-xs text-slate-400">Bypass user-space overhead</div>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="toggle-ebpf" class="sr-only peer" checked>
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+                                    </label>
+                                </div>
+
+                                <!-- Switch 2 -->
+                                <div class="flex items-center justify-between p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                                    <div class="pr-2">
+                                        <div class="text-sm font-semibold text-slate-200">Smart Grid Balancer</div>
+                                        <div class="text-xs text-slate-400">Autonomous power distribution</div>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="toggle-grid" class="sr-only peer" checked>
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+                                    </label>
+                                </div>
+
+                                <!-- Switch 3 -->
+                                <div class="flex items-center justify-between p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                                    <div class="pr-2">
+                                        <div class="text-sm font-semibold text-slate-200">Cryogenic Thermal Sync</div>
+                                        <div class="text-xs text-slate-400">QPU cooling loop stabilization</div>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="toggle-cryo" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+                                    </label>
+                                </div>
+
+                                <!-- Switch 4 -->
+                                <div class="flex items-center justify-between p-3.5 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                                    <div class="pr-2">
+                                        <div class="text-sm font-semibold text-slate-200">Fusion Magnetic Feedback</div>
+                                        <div class="text-xs text-slate-400">Tokamak plasma confinement</div>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="toggle-fusion" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LIVE TELEMETRY CARDS -->
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold text-white mb-4">Live Telemetry Metrics</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                    <div class="text-xs text-slate-400 font-mono mb-1">LATENCY</div>
+                                    <div id="live-latency" class="text-2xl font-black text-cyan-400 font-mono">0.42 ms</div>
+                                </div>
+                                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                    <div class="text-xs text-slate-400 font-mono mb-1">CPU OVERHEAD</div>
+                                    <div id="live-cpu" class="text-2xl font-black text-emerald-400 font-mono">0.38 %</div>
+                                </div>
+                                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                    <div class="text-xs text-slate-400 font-mono mb-1">MEMORY LEAK</div>
+                                    <div class="text-2xl font-black text-emerald-400 font-mono">0.00 %</div>
+                                </div>
+                                <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+                                    <div class="text-xs text-slate-400 font-mono mb-1">THROUGHPUT</div>
+                                    <div id="live-throughput" class="text-2xl font-black text-amber-400 font-mono">1.28 TB/s</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN (2 COLS): REAL-TIME CHART & CONSOLE LOG -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- REAL-TIME CANVAS GRAPH -->
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">Kernel Latency vs CPU Overhead</h3>
+                                    <p class="text-xs text-slate-400 font-mono">Real-time eBPF interrupt feedback loop</p>
+                                </div>
+                                <div class="flex items-center space-x-4 text-xs font-mono">
+                                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block mr-1.5"></span>Latency (ms)</span>
+                                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block mr-1.5"></span>CPU Overhead (%)</span>
+                                </div>
+                            </div>
+                            <div class="h-64 sm:h-72">
+                                <canvas id="telemetryChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- LIVE LOG TERMINAL -->
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-mono text-slate-400 flex items-center space-x-2">
+                                    <i class="fa-solid fa-code text-cyan-400"></i>
+                                    <span>Kernel Event Stream (/dev/dragon_v100)</span>
+                                </span>
+                                <button id="btn-clear-logs" class="text-xs text-slate-400 hover:text-white transition-colors">Clear</button>
+                            </div>
+                            <div id="terminal-logs" class="bg-slate-950 p-4 rounded-xl h-36 font-mono text-xs overflow-y-auto space-y-1.5 border border-slate-800 text-slate-300">
+                                <div class="text-emerald-400">[SYSTEM] Dragon Controller v100 initialized successfully.</div>
+                                <div class="text-slate-400">[eBPF] Hooked into Linux kernel network ring buffers.</div>
+                                <div class="text-cyan-400">[TELEMETRY] Latency stabilized at 0.38ms. Memory leak 0%.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CORE TECHNOLOGIES GRID -->
+        <section id="technologies" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Core Innovation Pillars</h2>
+                <p class="text-slate-400">
+                    Bridging classical high-performance computing with next-generation electrification and physics control planes.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-brand-accent/50 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Smart Grid Automation</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Autonomous microgrid load balancing using kernel-level telemetry to prevent power surges and optimize renewable distribution.
+                    </p>
+                    <span class="text-xs font-mono text-cyan-400 flex items-center space-x-1">
+                        <span>75% Efficiency Boost</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-brand-accent/50 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Dragon eBPF Core</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Kernel-space packet bypass engine delivering sub-millisecond I/O processing without user-space context switches.
+                    </p>
+                    <span class="text-xs font-mono text-emerald-400 flex items-center space-x-1">
+                        <span>0.00% Memory Leak</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-brand-accent/50 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-atom"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Quantum/Fusion Plane</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Precision control plane interfacing with QPU pulse channels and tokamak magnetic confinement feedback loops.
+                    </p>
+                    <span class="text-xs font-mono text-purple-400 flex items-center space-x-1">
+                        <span>35% Control Role</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="glass-panel p-6 rounded-2xl hover:border-brand-accent/50 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Green Computing</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                        Slashing CPU overhead to under 1%, drastically reducing energy consumption and carbon footprints in AI datacenters.
+                    </p>
+                    <span class="text-xs font-mono text-amber-400 flex items-center space-x-1">
+                        <span>&lt; 1% CPU Overhead</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI & SIMULATOR SECTION -->
+        <section id="simulator" class="py-20 bg-slate-900/60 border-t border-brand-border">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-mono mb-4">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span>Impact Calculator</span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+                            Calculate Efficiency Gains with Dragon v100
+                        </h2>
+                        <p class="text-slate-300 mb-8 leading-relaxed">
+                            Simulate how implementing Torvax Dragon Controller v100 reduces latency bottlenecks, cuts energy expenditure, and maximizes compute throughput for your infrastructure.
+                        </p>
+
+                        <!-- INPUT CONTROLS -->
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm font-semibold mb-2">
+                                    <span class="text-slate-300">Server Nodes / Microgrids</span>
+                                    <span id="val-nodes" class="text-brand-accent font-mono">500 Nodes</span>
+                                </div>
+                                <input type="range" id="input-nodes" min="50" max="5000" step="50" value="500" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-accent">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm font-semibold mb-2">
+                                    <span class="text-slate-300">Average Load Traffic</span>
+                                    <span id="val-load" class="text-brand-accent font-mono">75 %</span>
+                                </div>
+                                <input type="range" id="input-load" min="10" max="100" step="5" value="75" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-accent">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OUTPUT SIMULATION CARD -->
+                    <div class="glass-panel p-8 rounded-3xl border border-brand-accent/30 glow-accent">
+                        <h3 class="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-line text-cyan-400"></i>
+                            <span>Projected Annual Savings</span>
+                        </h3>
+
+                        <div class="space-y-6">
+                            <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800">
+                                <div class="text-xs text-slate-400 font-mono uppercase mb-1">Estimated Power Saved</div>
+                                <div id="sim-power" class="text-3xl font-black text-emerald-400 font-mono">1,420 MWh / yr</div>
+                            </div>
+
+                            <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800">
+                                <div class="text-xs text-slate-400 font-mono uppercase mb-1">Latency Reduction Factor</div>
+                                <div id="sim-latency" class="text-3xl font-black text-cyan-400 font-mono">92.5 % Faster</div>
+                            </div>
+
+                            <div class="p-4 bg-slate-900/90 rounded-2xl border border-slate-800">
+                                <div class="text-xs text-slate-400 font-mono uppercase mb-1">Estimated Cost Reduction</div>
+                                <div id="sim-cost" class="text-3xl font-black text-amber-400 font-mono">$ 213,000 USD</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="bg-slate-950 border-t border-slate-800 py-12 text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <!-- Footer Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-slate-900 flex items-center justify-center border border-cyan-500/40">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L4 20H8L10.5 14H13.5L16 20H20L12 2Z" fill="#38BDF8"/>
+                        <path d="M13 7L21 2M21 2H16M21 2V7" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="text-lg font-bold text-white tracking-wider">Torvax</span>
+            </div>
+
+            <p class="text-xs font-mono text-slate-500">
+                &copy; 2026 Torvax Innovation Hub. Powered by Dragon Controller v100 Engine.
+            </p>
+
+            <div class="flex space-x-6 text-slate-400">
+                <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-brands fa-github text-lg"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-envelope text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // 1. HERO CANVAS BACKGROUND ANIMATION
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(56, 189, 248, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 70; i++) particles.push(new Particle());
+
+        function animateHeroCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateHeroCanvas);
+        }
+        animateHeroCanvas();
+
+        // 2. REAL-TIME TELEMETRY CHART (CHART.JS)
+        const ctxChart = document.getElementById('telemetryChart').getContext('2d');
+        const labels = Array.from({length: 15}, (_, i) => `${i}s ago`).reverse();
+        const latencyData = Array.from({length: 15}, () => (Math.random() * 0.3 + 0.3).toFixed(2));
+        const cpuData = Array.from({length: 15}, () => (Math.random() * 0.2 + 0.2).toFixed(2));
+
+        const telemetryChart = new Chart(ctxChart, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Latency (ms)',
+                        data: latencyData,
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'CPU Overhead (%)',
+                        data: cpuData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                        ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                        ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } },
+                        suggestedMin: 0,
+                        suggestedMax: 1
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 3. LIVE DASHBOARD INTERACTION & TELEMETRY FEED
+        const liveLatency = document.getElementById('live-latency');
+        const liveCpu = document.getElementById('live-cpu');
+        const liveThroughput = document.getElementById('live-throughput');
+        const terminalLogs = document.getElementById('terminal-logs');
+
+        function addLog(msg, colorClass = 'text-slate-300') {
+            const time = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = colorClass;
+            logEntry.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
+            terminalLogs.appendChild(logEntry);
+            terminalLogs.scrollTop = terminalLogs.scrollHeight;
+        }
+
+        setInterval(() => {
+            const ebpfActive = document.getElementById('toggle-ebpf').checked;
+            const latencyVal = ebpfActive ? (Math.random() * 0.25 + 0.30).toFixed(2) : (Math.random() * 3.5 + 4.2).toFixed(2);
+            const cpuVal = ebpfActive ? (Math.random() * 0.20 + 0.25).toFixed(2) : (Math.random() * 4.5 + 6.0).toFixed(2);
+            const tpVal = (Math.random() * 0.15 + 1.20).toFixed(2);
+
+            liveLatency.innerText = `${latencyVal} ms`;
+            liveCpu.innerText = `${cpuVal} %`;
+            liveThroughput.innerText = `${tpVal} TB/s`;
+
+            // Update Chart
+            telemetryChart.data.datasets[0].data.shift();
+            telemetryChart.data.datasets[0].data.push(latencyVal);
+            telemetryChart.data.datasets[1].data.shift();
+            telemetryChart.data.datasets[1].data.push(cpuVal);
+            telemetryChart.update();
+        }, 1500);
+
+        // Switches Listeners
+        document.getElementById('toggle-ebpf').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                addLog('eBPF Kernel Injection ENABLED. Bypassing user-space overhead.', 'text-cyan-400');
+            } else {
+                addLog('eBPF Kernel Injection DISABLED. Falling back to standard OS network stack.', 'text-amber-400');
+            }
+        });
+
+        document.getElementById('toggle-grid').addEventListener('change', (e) => {
+            addLog(`Smart Grid Balancer: ${e.target.checked ? 'ACTIVE' : 'STANDBY'}`, 'text-emerald-400');
+        });
+
+        document.getElementById('toggle-cryo').addEventListener('change', (e) => {
+            addLog(`Cryogenic Thermal Sync: ${e.target.checked ? 'ENGAGED' : 'OFF'}`, 'text-purple-400');
+        });
+
+        document.getElementById('toggle-fusion').addEventListener('change', (e) => {
+            addLog(`Fusion Magnetic Feedback Loop: ${e.target.checked ? 'LOCK-ON' : 'RELEASED'}`, 'text-amber-400');
+        });
+
+        document.getElementById('btn-clear-logs').addEventListener('click', () => {
+            terminalLogs.innerHTML = '';
+        });
+
+        // 4. ROI SIMULATOR LOGIC
+        const inputNodes = document.getElementById('input-nodes');
+        const inputLoad = document.getElementById('input-load');
+        const valNodes = document.getElementById('val-nodes');
+        const valLoad = document.getElementById('val-load');
+
+        const simPower = document.getElementById('sim-power');
+        const simLatency = document.getElementById('sim-latency');
+        const simCost = document.getElementById('sim-cost');
+
+        function updateSimulator() {
+            const nodes = parseInt(inputNodes.value);
+            const load = parseInt(inputLoad.value);
+
+            valNodes.innerText = `${nodes} Nodes`;
+            valLoad.innerText = `${load} %`;
+
+            const powerSaved = Math.round((nodes * load * 3.8) / 10);
+            const costSaved = Math.round(powerSaved * 150);
+            const latencyBoost = (85 + (load * 0.1)).toFixed(1);
+
+            simPower.innerText = `${powerSaved.toLocaleString()} MWh / yr`;
+            simCost.innerText = `$ ${costSaved.toLocaleString()} USD`;
+            simLatency.innerText = `${latencyBoost} % Faster`;
+        }
+
+        inputNodes.addEventListener('input', updateSimulator);
+        inputLoad.addEventListener('input', updateSimulator);
+        updateSimulator();
+    </script>
+</body>
+</html>
